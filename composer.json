@@ -11,7 +11,8 @@
     ]
   },
   "require": {
-    "php": ">=7.4"
+    "php": ">=7.4",
+    "zheltikov/php-type-assert": "^2.3"
   },
   "require-dev": {
     "nazar-pc/phpt-tests-runner": "^1.4"
