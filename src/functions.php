@@ -1,0 +1,4 @@
+<?php
+
+namespace Zheltikov\Geometry;
+
