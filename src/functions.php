@@ -180,3 +180,35 @@ function convex_hull(array $points): ?array
 
     return $S;
 }
+
+/**
+ * The Point objects' data id used as `x -> latitude` and `y -> longitude`.
+ * @param \Zheltikov\Geometry\Point $a The `from` point coordinates.
+ * @param \Zheltikov\Geometry\Point $b The `to` point coordinates.
+ * @param float|null $earth_radius The Earth's radius in the desired unit. By
+ *                                 default, meters are used.
+ * @return float The distance between the two points, in the same unit as the
+ *               `$earth_radius` parameter.
+ */
+function harvesine_distance(Point $a, Point $b, ?float $earth_radius = null): float
+{
+    if ($earth_radius === null) {
+        // In meters by default
+        $earth_radius = 6371 * 1000;
+    }
+
+    // The values in radians, for the trig functions
+    $a_latitude = $a->getX() * M_PI / 180;
+    $b_latitude = $b->getX() * M_PI / 180;
+    $delta_latitude = ($b->getX() - $a->getX()) * M_PI / 180;
+    $delta_longitude = ($b->getY() - $a->getY()) * M_PI / 180;
+
+    // The distance calculation itself...
+    $angle = sin($delta_latitude / 2) * sin($delta_latitude / 2) +
+             cos($a_latitude) * cos($b_latitude) *
+             sin($delta_longitude / 2) * sin($delta_longitude / 2);
+    $angle = 2 * atan2(sqrt($angle), sqrt(1 - $angle));
+
+    // In the same units as $earth_radius
+    return $earth_radius * $angle;
+}
